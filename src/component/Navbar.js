@@ -8,8 +8,7 @@ export class Navbar extends Component {
             <div>
                 <nav className="navbar navbar-dark bg-dark mb-3 fixed-top">
                     <div className="container-fluid">
-                        <Link className="navbar-brand" to="/">Live News <span className="position-absolute  translate-middle badge rounded-pill bg-warning" style={{top: '50%', left: '13%', zindex: '1'}}>
-    USA </span></Link>
+                        <Link className="navbar-brand" to="/">Live News</Link>
                         <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
                             <span className="navbar-toggler-icon"></span>
                         </button>

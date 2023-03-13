@@ -7,7 +7,7 @@ export class NewsItems extends Component {
         return (
             <div>
                 <div className="card" style={{width: "18rem"}}>
-                <span className="position-absolute top-0  translate-middle badge rounded-pill bg-dark" style={{left: '80%', zindex : '1'}}> {source} </span>
+                <span className="position-absolute badge rounded-pill bg-dark"> {source} </span>
     {/* <span class="visually-hidden">unread messages</span> */}
                     <img src={!imageUrl?'https://source.unsplash.com/random':imageUrl} className="card-img-top" alt="..."/>
                         <div className="card-body">

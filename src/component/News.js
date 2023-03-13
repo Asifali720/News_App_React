@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
+
 export class News extends Component {
     static defaultType = {
         country: 'us',
@@ -20,7 +21,7 @@ export class News extends Component {
         super(props)
         this.state = {
             articles: [],
-            // loading: true,
+            loading: true,
             page: 1,
             totalResults: 0
         }
@@ -31,11 +32,14 @@ export class News extends Component {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     async update() {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=a09a37db392349c4aa4b3f7109d3c744&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
-    //  this.setState({ loading: true })   
+        this.props.setProgress(0)
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKey}&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
+        this.props.setProgress(30)
+         this.setState({ loading: true })   
         let data = await fetch(url);
         let parseData = await data.json()
-        this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, })
+        this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, loading: false })
+        this.props.setProgress(100)
 
     }
     async componentDidMount() {
@@ -51,17 +55,17 @@ export class News extends Component {
     // }
     fetchMoreData = async () => {
         this.setState({ page: this.state.page + 1 })
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=a09a37db392349c4aa4b3f7109d3c744&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKey}&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
         // this.loadMoreItems()
-        // this.setState({ loading: false })
+        this.setState({ loading: true })
         let data = await fetch(url);
         let parseData = await data.json()
-        this.setState({ articles: this.state.articles.concat(parseData.articles), totalResults: parseData.totalResults, })      
+        this.setState({ articles: this.state.articles.concat(parseData.articles), totalResults: parseData.totalResults, loading: false })
         // if (this.state.loading || (this.state.items > this.state.hasMore)) {
         //     // Do not load if there's no more items
         //     return;
         //   }    
-        
+
     }
 
     // loadMoreItems = () => {
@@ -76,16 +80,16 @@ export class News extends Component {
         return (
             // <div className='container my-5 mb-5 p-3'>
             <>
-              <div className='container' style={{marginTop: '5rem'}}>
-                <h1>Live News - Headlines of {this.capitalizeFirstLetter(this.props.category)}</h1>
-                {this.loading === true?<Spinner/>: this.loading === false}
+                <div className='container' style={{ marginTop: '5rem' }}>
+                    <h1>Live News - Headlines of {this.capitalizeFirstLetter(this.props.category)}</h1>
+                    {this.loading === true ? <Spinner /> : this.loading === false}
                 </div>
-
+                <div>
                 <InfiniteScroll
                     dataLength={this.state.articles.length}
                     next={this.fetchMoreData}
-                    hasMore={this.state.articles.length !== this.state.totalResults}
-                    loader={<Spinner />}
+                    hasMore={this.state.articles.length !== this.totalResults}
+                    loader={<Spinner/>}
                 >
                     <div className="container mt-0">
                         <div className="row">
@@ -99,13 +103,14 @@ export class News extends Component {
                     </div>
 
                 </InfiniteScroll>
-                     
+                </div>
+
             </>
-               
-                /* <div className="container d-flex justify-content-between">
-                    <button disabled={this.state.page <= 1} className="btn btn-dark" onClick={this.handleOnPrevious}>&larr; previous</button>
-                    <button disabled={this.state.page > Math.ceil(this.state.totalResults / this.props.pagesize)} className="btn btn-dark" onClick={this.handleOnNext}>next &rarr;</button>
-                </div> */
+
+            /* <div className="container d-flex justify-content-between">
+                <button disabled={this.state.page <= 1} className="btn btn-dark" onClick={this.handleOnPrevious}>&larr; previous</button>
+                <button disabled={this.state.page > Math.ceil(this.state.totalResults / this.props.pagesize)} className="btn btn-dark" onClick={this.handleOnNext}>next &rarr;</button>
+            </div> */
             // </div>
         )
     }
