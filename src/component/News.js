@@ -33,12 +33,12 @@ export class News extends Component {
     }
     async update() {
         this.props.setProgress(0)
+        // this.setState({ loading: true }) 
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKey}&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
-        this.props.setProgress(30)
-         this.setState({ loading: true })   
+        this.props.setProgress(30)  
         let data = await fetch(url);
         let parseData = await data.json()
-        this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, loading: false })
+        this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, })
         this.props.setProgress(100)
 
     }
@@ -54,13 +54,14 @@ export class News extends Component {
     //     this.update()
     // }
     fetchMoreData = async () => {
+        // this.setState({ loading: true })
         this.setState({ page: this.state.page + 1 })
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKey}&category=${this.props.category}&page=${this.state.page}&pagesize=${this.props.pagesize}`
         // this.loadMoreItems()
-        this.setState({ loading: true })
+        // this.setState({ loading:  })
         let data = await fetch(url);
         let parseData = await data.json()
-        this.setState({ articles: this.state.articles.concat(parseData.articles), totalResults: parseData.totalResults, loading: false })
+        this.setState({ articles: this.state.articles.concat(parseData.articles), totalResults: parseData.totalResults, })
         // if (this.state.loading || (this.state.items > this.state.hasMore)) {
         //     // Do not load if there's no more items
         //     return;
@@ -82,13 +83,13 @@ export class News extends Component {
             <>
                 <div className='container' style={{ marginTop: '5rem' }}>
                     <h1>Live News - Headlines of {this.capitalizeFirstLetter(this.props.category)}</h1>
-                    {this.loading === true ? <Spinner /> : this.loading === false}
+                    {this.loading ? <Spinner /> : null}
                 </div>
                 <div>
                 <InfiniteScroll
                     dataLength={this.state.articles.length}
                     next={this.fetchMoreData}
-                    hasMore={this.state.articles.length !== this.totalResults}
+                    hasMore={this.state.articles.length < this.state.totalResults}
                     loader={<Spinner/>}
                 >
                     <div className="container mt-0">
